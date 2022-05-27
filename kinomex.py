@@ -134,7 +134,7 @@ class KinomeX:
             for detail_element in detail_links:
                 detail_link = detail_element['href']
                 self.download_molecules_from_record(
-                    "https://kinome.simm.ac.cn" + detail_link, "./results")
+                    "https://kinome.simm.ac.cn" + detail_link, file_path)
 
 
 # k = KinomeX("YOUR_SESSIONID",
