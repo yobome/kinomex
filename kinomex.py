@@ -15,7 +15,10 @@ class KinomeX:
         self._submit_url = self._main_url + "/en/checkout/summary/"
 
         self._session = requests.Session()
-
+    
+    '''
+    Upload file to submission list.
+    '''
     def add_to_submission_list(self, file_path: str) -> None:
         _headers = {
             'Cookie': 'csrftoken=%s; sessionid=%s;' % (self._csrf_token, self._session_id),
@@ -36,6 +39,9 @@ class KinomeX:
         self._session.post(url=self._add_to_cart_url, data=payload,
                            files=files, headers=_headers, verify=False)
 
+    '''
+    Submit all files in submission list.
+    '''
     def submit(self) -> None:
         _headers = {
             'Cookie': 'csrftoken=%s; sessionid=%s;' % (self._csrf_token, self._session_id),
@@ -43,12 +49,19 @@ class KinomeX:
         }
         self._session.get(self._submit_url, headers=_headers, verify=False)
 
+        
+    '''
+    Upload file to submission list and submit it.
+    '''
     def upload_one(self, file_path: str) -> None:
         self.add_to_submission_list(file_path)
         print("%s UPLOADED." % file_path)
         self.submit()
         print("Submit 1 file.")
 
+    '''
+    A function used to walk file under a specific directory.
+    '''
     def _walk_file(self, file: str) -> None:
         file_list = []
         for root, dirs, files in os.walk(file):
@@ -66,6 +79,9 @@ class KinomeX:
             #     print(os.path.join(root, d))
         return file_list
 
+    '''
+    Upload all files and submit.
+    '''
     def upload_all(self, directory: str) -> None:
         file_list = self._walk_file(directory)
         i = 0
@@ -82,6 +98,9 @@ class KinomeX:
             print("Submit %d files." % i)
         print("Submit all %d files!" % len(file_list))
 
+    '''
+    Download all molecule files in one record.
+    '''
     def download_molecules_from_record(self, url: str, file_path: str) -> None:
         _headers = {
             'Cookie': 'csrftoken=%s; sessionid=%s;' % (self._csrf_token, self._session_id)
@@ -108,6 +127,9 @@ class KinomeX:
                   (file_path, molecule_name))
             # sleep(3)
 
+    '''
+    Function used to download file from url to a local file.
+    '''
     def download_file(self, url: str, file_path: str) -> None:
         _headers = {
             'Cookie': 'csrftoken=%s; sessionid=%s;' % (self._csrf_token, self._session_id)
@@ -116,6 +138,9 @@ class KinomeX:
             with open(file_path, 'wb') as f:
                 f.write(r.content)
 
+    '''
+    Download all molecules results and figures.
+    '''
     def download_all(self, file_path: str) -> None:
         _headers = {
             'Cookie': 'csrftoken=%s; sessionid=%s;' % (self._csrf_token, self._session_id)
